@@ -4,8 +4,10 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Threading;
+using UserAction;
 
 namespace WebDriverSupport
 {
@@ -17,28 +19,29 @@ namespace WebDriverSupport
 
         public AppWebDriver SetElementById(string id)
         {
-            //WebDriverWait wait = new WebDriverWait(Driver, new TimeSpan(0, 0, 10));
-            //Element = wait.Until(ExpectedConditions.ElementIsVisible(By.Id(id)));
 
-            Element = Driver.FindElement(By.Id(id));
+            Element = Wait.Until(ExpectedConditions.ElementIsVisible(By.Id(id)));
+            return this;
+        }
+
+        public AppWebDriver SetElementByCss(string css)
+        {
+
+            Element = Wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
             return this;
         }
 
         public AppWebDriver SetElementByLinkText(string text)
         {
-            //WebDriverWait wait = new WebDriverWait(Driver, new TimeSpan(0, 0, 10));
-            //Element = wait.Until(ExpectedConditions.ElementIsVisible(By.LinkText(text)));
 
-            Element = Driver.FindElement(By.LinkText(text));
+            Element = Wait.Until(ExpectedConditions.ElementIsVisible(By.LinkText(text)));
             return this;
         }
 
         public AppWebDriver SetElementByXPath(string path)
         {
-            //WebDriverWait wait = new WebDriverWait(Driver, new TimeSpan(0, 0, 10));
-            //Element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(path)));
 
-            Element = Driver.FindElement(By.XPath(path));
+            Element = Wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(path)));
             return this;
         }
 
@@ -59,6 +62,8 @@ namespace WebDriverSupport
             Actions builder = new Actions(Driver);
             builder.SendKeys(text).Perform();
 
+            //Actions.UserKeyboard.TextEntry(text);
+
             return this;
         }
         public AppWebDriver SendEnter()
@@ -67,6 +72,23 @@ namespace WebDriverSupport
             Actions builder = new Actions(Driver);
             builder.SendKeys(Keys.Enter).Perform();
             Thread.Sleep(1000);
+
+            return this;
+        }
+
+        private AppWebDriver MouseCrossElement()
+        {
+            var a = Element;
+            var elementPoint = Element.Location;
+            var elementMiddle = new Point(elementPoint.X + (Element.Size.Width / 2), elementPoint.Y + 120 + (Element.Size.Height / 2));
+            var pointA = new Point(elementMiddle.X, elementMiddle.Y - 20);
+            var pointB = new Point(elementMiddle.X, elementMiddle.Y + 20);
+            var pointC = new Point(elementMiddle.X -20, elementMiddle.Y);
+            var pointD = new Point(elementMiddle.X + 20, elementMiddle.Y);
+            Actions.UserMouse.MoveMouseWithVisible(pointA);
+            Actions.UserMouse.MoveMouseWithVisible(pointB);
+            Actions.UserMouse.MoveMouseWithVisible(pointC);
+            Actions.UserMouse.MoveMouseWithVisible(pointD);
 
             return this;
         }
@@ -81,9 +103,10 @@ namespace WebDriverSupport
         public AppWebDriver Click()
         {
 
+            MouseCrossElement();
 
             Actions builder = new Actions(Driver);
-            builder.MoveToElement(Element).Perform();
+            builder.MoveToElement(Element).Build().Perform();
 
             Element.Click();
             return this;

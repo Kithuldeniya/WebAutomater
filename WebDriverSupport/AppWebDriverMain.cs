@@ -1,19 +1,23 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using System;
+using UserAction;
 
 namespace WebDriverSupport
 {
     public partial class AppWebDriver
     {
         private IWebDriver Driver { get; set; }
+        private UserActions Actions { get; set; }
+
+        private WebDriverWait Wait { get; set; }
+
 
         public AppWebDriver()
         {
             CreateChromeDriver();
+            Actions = new UserActions();
         }
 
         public AppWebDriver CreateChromeDriver()
@@ -28,9 +32,11 @@ namespace WebDriverSupport
                 "--start-maximized");
 
             Driver = new ChromeDriver(options);
-            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(120);
             Driver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(200);
             Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(300);
+
+            Wait = new WebDriverWait(Driver, new TimeSpan(0,2,0));
 
             return  this;
         }

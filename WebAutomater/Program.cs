@@ -1,13 +1,10 @@
-﻿using CsvHelper;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Globalization;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using WebDriverSupport;
+using UserAction;
 using WebsiteSupport.Facebook;
+using WebsiteSupport.Tutanota;
 
 namespace WebAutomater
 {
@@ -22,12 +19,6 @@ namespace WebAutomater
 
             Configuration = builder.Build();
 
-            //string myKey1 = configuration["myKey1"];
-            //Console.WriteLine(myKey1);
-
-            //string foo = configuration.GetSection("foo").Value;
-            //Console.WriteLine(foo);
-
 
             //var fb = new Facebook();
             //fb.Login();
@@ -38,41 +29,47 @@ namespace WebAutomater
 
             //fb.Logout();
 
-            insertToDB();
+
+            var tn = new Tutanota();
+            tn.SignUp();
+
+            //insertToDB();
         }
 
 
-        static void insertToDB(){
-
-            List<Foo> records;
-
-            using (var reader = new StreamReader(@"C:\Users\Rajitha\Test VS projects\WebAutomater\Database\Users.csv"))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                csv.Configuration.HasHeaderRecord = false;
-                records = csv.GetRecords<Foo>().ToList();
-            }
-
-            var i = 0;
-            var a = records.Select(r => {
-                i++;
-                return new Foo1
-                {
-                    uid = i,
-                    provi ="Tutanota",
-                    Email = ( $"{r.fname}{(new DateTime(r.year, r.month + 1, r.day)).ToString("yyyy")}{r.lname.Replace(" ","")}@tutanota.com").ToLower(),
-                    pw = r.password
-                }; });
 
 
-            using (var writer = new StreamWriter(@"C:\Users\Rajitha\Test VS projects\WebAutomater\Database\Users_up.csv"))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                csv.WriteRecords(a);
+        //static void insertToDB(){
 
-            }
+        //    List<Foo> records;
 
-        }
+        //    using (var reader = new StreamReader(@"C:\Users\Rajitha\Test VS projects\WebAutomater\Database\Users.csv"))
+        //    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+        //    {
+        //        csv.Configuration.HasHeaderRecord = false;
+        //        records = csv.GetRecords<Foo>().ToList();
+        //    }
+
+        //    var i = 0;
+        //    var a = records.Select(r => {
+        //        i++;
+        //        return new Foo1
+        //        {
+        //            uid = i,
+        //            provi ="Tutanota",
+        //            Email = ( $"{r.fname}{(new DateTime(r.year, r.month + 1, r.day)).ToString("yyyy")}{r.lname.Replace(" ","")}@tutanota.com").ToLower(),
+        //            pw = r.password
+        //        }; });
+
+
+        //    using (var writer = new StreamWriter(@"C:\Users\Rajitha\Test VS projects\WebAutomater\Database\Users_up.csv"))
+        //    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        //    {
+        //        csv.WriteRecords(a);
+
+        //    }
+
+        //}
     }
 
 
