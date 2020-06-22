@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using NLog;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -22,6 +23,7 @@ namespace WebDriverSupport
 
         public AppWebDriver CreateChromeDriver()
         {
+            LogManager.GetCurrentClassLogger().Debug($"Creating chrome driver");
             ChromeOptions options = new ChromeOptions();
             options.AddArguments(
                 "--incognito",
@@ -32,7 +34,7 @@ namespace WebDriverSupport
                 "--start-maximized");
 
             Driver = new ChromeDriver(options);
-            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(120);
+            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
             Driver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(200);
             Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(300);
 
@@ -47,10 +49,12 @@ namespace WebDriverSupport
             //Element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(path)));
             if(Driver.Url == url)
             {
+                LogManager.GetCurrentClassLogger().Debug($"Refresh Url : {url}");
                 Driver.Navigate().Refresh();
             }
             else
             {
+                LogManager.GetCurrentClassLogger().Debug($"Going to Url : {url}");
                 Driver.Navigate().GoToUrl(url);
             }
 

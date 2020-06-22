@@ -12,9 +12,5 @@ namespace UserAction
         public UserKeyboard(IInputSimulator inputSimulator) : base(inputSimulator)
         { 
         }
-
-        
-
-
     }
 }
